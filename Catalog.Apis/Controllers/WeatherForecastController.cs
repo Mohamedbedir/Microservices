@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson.Serialization.Attributes;
+using System.Runtime.Serialization;
 
 namespace Catalog.Apis.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
