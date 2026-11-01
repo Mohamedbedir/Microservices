@@ -1,0 +1,20 @@
+services:
+  catalogdb:
+    image: mongo:7
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  catalog.apis:
+    image: ${DOCKER_REGISTRY-}catalogapis
+    build:
+      context: .
+      dockerfile: Catalog.Apis/Dockerfile
+    depends_on:
+      catalogdb:
+        condition: service_healthy
+
+volumes:
+  mongo_data:

@@ -49,5 +49,47 @@ namespace Catalog.Apis.Controllers
             var products = await _ProductRepo.GetProductByName(name);
             return Ok(products);
         }
+        [HttpPost]
+        [ProducesResponseType(typeof(Product), StatusCodes.Status201Created)]
+        public async Task<ActionResult> CreateProduct([FromBody] Product product) 
+        {
+            await _ProductRepo.CreateProduct(product);
+            return Created();
+            //return CreatedAtRoute("GetProductById", new {id=product.Id},product);
+        }
+
+        [HttpPut("id")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> EditProduct([FromBody] Product product) 
+        {
+            var Existproduct=await _ProductRepo.GetProduct(product.Id);
+            if (Existproduct == null)
+                return NotFound();
+            var res = await _ProductRepo.UpdateProduct(product);
+            if(!res)
+                return BadRequest(res);
+            return Ok(res);
+        }
+        [HttpDelete("id")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> DeleteProduct([FromBody] string id) 
+        {
+            var product=await _ProductRepo.GetProduct(id);
+            if (product == null)
+                return NotFound();
+            var res = await _ProductRepo.DeleteProduct(id);
+            if(!res)
+                return BadRequest(res);
+            return Ok(res);
+        }
+
+
+
+
+        // 18
     }
 }
